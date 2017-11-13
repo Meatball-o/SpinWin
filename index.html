@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="css/kinerLottery.css">
+</head>
+<body>
+<ul class="demonav">
+  <li class="rule">活动规则</li>
+  <li class="spoil">我的奖品</li>
+</ul>
+<div id="box" class="box">
+  <div class="outer KinerLottery KinerLotteryContent"><img src="./images/lanren.png"></div>
+  <div class="inner KinerLotteryBtn start"></div>
+</div>
+<div class="fotter">
+  <p style="color: #ffffff;font-size: 18px;">选择充值金额</p>
+  <ul class="money">
+    <li class="cur">10元</li>
+    <li>30元</li>
+    <li>50元</li>
+  </ul>
+  <p style="color: #F2A475;font-size: 18px;"> 充值游戏赢好礼</p>
+  <div class="show">
+    <div class="top"></div>
+    <div class="bottom"></div>
+  </div>
+</div>
+<script src="js/zepto.min.js"></script>
+<script src="js/kinerLottery.js"></script>
+<script>
+  function pushBarrage(text) {
+    $('.show').find('.bottom').text(text);
+    $('.show').find('.top,.bottom').toggleClass('top bottom');
+  }
+
+  pushBarrage('恭喜用户 '+getRandomPhone() +' 中奖');
+  pushBarrage('恭喜用户 '+getRandomPhone() +' 中奖');
+  setInterval(function () {
+    pushBarrage('恭喜用户 '+getRandomPhone() +' 中奖');
+  }, 1088);
+
+  //        点击充值金额切换转盘
+  var bgs = ['./images/lanren.png', './images/lanren2.png', './images/lanren3.png'];
+  $('.money li').click(function () {
+    var index = $(this).index();
+    $(this).addClass("cur").siblings().removeClass("cur");
+//      console.log(index);
+    $('#box .outer img').attr("src", bgs[index]);
+  })
+  var whichAward = function (deg) {
+    if ((deg > 330 && deg <= 360) || (deg > 0 && deg <= 30)) {
+      return "三网通流量 10M";
+    } else if ((deg > 30 && deg <= 90)) {
+      return "iPhone7";
+    } else if (deg > 90 && deg <= 150) {
+      return "三网通流量 30M";
+    } else if (deg > 150 && deg <= 210) {
+      return "话费5元";
+    } else if (deg > 210 && deg <= 270) {
+      return "ipad mini4";
+    } else if (deg > 270 && deg <= 330) {
+      return "话费20元";
+    }
+  }
+  function getRandomPhone() {
+    var prefixArray = new Array("130", "131", "132", "133", "135", "137", "138", "170", "187", "189");
+    var i = parseInt(prefixArray.length * Math.random());
+    var prefix = prefixArray[i];
+    for (var j = 0; j < 8; j++) {
+      prefix = prefix + Math.floor(Math.random() * 10);
+    }
+    return prefix;
+  }
+
+  var KinerLottery = new KinerLottery({
+    rotateNum: 8,
+    body: "#box",
+    direction: 0,
+    disabledHandler: function (key) {
+      switch (key) {
+        case "noStart":
+          alert("活动尚未开始");
+          break;
+        case "completed":
+          alert("活动已结束");
+          break;
+      }
+    },
+    clickCallback: function () {
+
+      function random() {
+        return Math.floor(Math.random() * 360);
+      }
+
+      this.goKinerLottery(random());
+    },
+    KinerLotteryHandler: function (deg) {
+      var message = "恭喜您获得:" + whichAward(deg);
+      alert(message);
+      pushBarrage(message);
+    }
+  });
+</script>
+</body>
+
+</html>
